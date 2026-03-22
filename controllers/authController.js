@@ -129,8 +129,29 @@ const resetPassword = async (req, res) => {
 }
 
 
+//Auth a logOut 
+
+const signOut = async (req, res) => {
+  //Getting access to the token as it contains the user ID and secrets, the id is then use to check on the datatbase if they are registered.
+  const token = req.cookies.token
+  try {
+    if (!token) return res.status(404).json({mess:'Already logged out. Please login'}); // Already logged out
+
+    res.clearCookie('token', {
+      httpOnly: true,
+      sameSite: 'Strict'
+    })
+    res.status(200).json({mess: 'Logged Out!'})
+  } catch (error) {
+      res.status(500).json({message: error.message});
+  }
+}
+
+
+
 module.exports = {
   signIn,
+  signOut,
   resetRequest,
   validationPasswordOtp,
   resetPassword
